@@ -1,0 +1,90 @@
+1.
+  1. string
+  2. integer
+  3. date
+  4. float
+  5. decimal
+
+2. A text file is used to store data but it is not helful when we need to manipulate the data. Database is used when the data that we store needs to be manipulated and accessed by multiple applications simultaniously as well as stored.
+
+3. SQL is declarative language that is used to communicate with a database. SQL concerned with "what" we want to find out while other programming languages are procedural and concerened with "how" we want to find what we need.
+
+4. Database structured using tables with rows, columns and cells just like charts and spreadsheets. The table holds a collection or related data and it organized by set of columns that define the attribute, rows that represent a set of related data, and cells that represent the value for each column's attribute. This structure allows us to easily store, access and manipulate large amounts of data.
+
+5.
+  Table: the structure that holds a collection of data.
+  Row: make up a complete conceptual unit.
+  Column: defines what the data represents.
+  Value: the data that contained in the cell.
+
+6. image, string, integers
+
+7.
+    SELECT date, amount
+    FROM payments;
+
+Find the date and amount from payments table
+
+  |Date		    |Amount	  |
+  |-----------|---------|
+  |5/1/2016		|1500.00  |
+  |5/10/2016	|37.00	  |
+  |5/15/2016	|124.93	  |
+  |5/23/2016	|54.72	  |
+
+    SELECT amount
+    FROM payments
+    WHERE amount > 500;
+
+Find the amount that if higher than 500 from payments table
+
+  |Amount	  |
+  |---------|
+  |1500.00  |
+
+
+    SELECT *
+    FROM payments
+    WHERE payee = 'Mega Foods';
+
+Select all the colums available where the payee is 'Mega Foods' from the payments table
+
+  |Date	      |Payee	      |Amount	     |Memo        |
+  |-----------|-------------|------------|------------|
+  |5/15/2016	|Mega Foods	  |124.93	     |Groceries   |
+
+
+8.
+
+The email and sign-up date for the user named DeAndre Data.
+
+  SELECT email, signup
+  FROM users
+  WHERE name = "DeAndre Data"
+
+  |email	            |signup          |
+  |-------------------|----------------|
+  |datad@comcast.net 	|2008-01-20      |
+
+The user ID for the user with email 'aleesia.algorithm@uw.edu'.
+
+  SELECT userid
+  FROM users
+  WHERE email = 'aleesia.algorithm@uw.edu'
+
+  |userid|
+  |------|
+  | 1    |
+
+All the columns for the user ID equal to 4.
+
+SELECT *
+FROM users
+WHERE userid = 4
+
+  |userid	  |name     	      |email	                |signup      |
+  |---------|-----------------|-----------------------|------------|
+  |  4	    | Brandy Boolean	| bboolean@nasa.gov	    | 1999-10-15 |
+
+
+
