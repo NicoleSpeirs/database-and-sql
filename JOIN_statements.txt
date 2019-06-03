@@ -1,0 +1,178 @@
+1. How do you find related data held in two separate data tables?
+
+    We use JOIN statements.
+
+2. Explain, in your own words, the difference between an INNER JOIN, LEFT OUTER JOIN, and RIGHT OUTER JOIN. Give a real-world example for each.
+
+  IF we have 3 tables (husband table, wife table, and child table)our child table is the INNER JOIN and will include information that is common between hasband and wife table since they share the same child. The LEFT OUTER JOIN and RIGHT OUTER JOIN tables in this case are the hasband and wife tables and will include information to the left and right of the child table if we were to join them.
+  INNER JOIN child's name, mother's name, father's name.
+  LEFT OUTER JOIN  wife table that will have the same child name as the husband table, but different age, ss number and phone number.
+  RIGHT OUTER JOIN hasband table that will have the same child name in common with wife's table but different age, ss number and phone number.
+
+3. Define primary key and foreign key. Give a real-world example for each.
+
+  Primary key has a unique identifier and can only be used one time per table such as; person's social security number or ID number.
+  Foreign key is a primary key in another table that can be used to join two tables such as; child's table will include foreign key "parent_id" that connects to the primary key on the patent's table.
+
+4. Define aliasing.
+
+  A technique of creating a short variable names instead of a full table name.
+
+5. Change this query so that you are using aliasing:
+
+    SELECT professor.name, compensation.salary,
+    compensation.vacation_days FROM professor JOIN
+    compensation ON professor.id =
+    compensation.professor_id;
+
+6. Why would you use a NATURAL JOIN? Give a real-world example.
+
+  By using a NATURAL JOIN we can retrieve a table list of all matching columns of two other tables. If we want to all of the information from our parent's tables.
+
+7. Using this Employee schema and data, write queries to find the following information:
+
+ List all employees and all shifts.
+
+    SELECT  employees.name, scheduled_shifts.shift_id
+    FROM employees
+    JOIN scheduled_shifts
+    ON employees.id = scheduled_shifts.employee_id;
+
+
+
+
+8. Using this Adoption schema and data, please write queries to retrieve the following information and include the results:
+
+  Create a list of all volunteers. If the volunteer is fostering a dog, include each dog as well.
+
+    SELECT volunteers.first_name, volunteers.last_name, dogs.name
+    FROM volunteers
+    LEFT OUTER JOIN dogs
+    ON volunteers.foster_dog_id = dogs.id;
+
+    first_name	  last_name	     dog_name
+    Rubeus	      Hagrid	      Munchkin
+    Marjorie	    Dursley	      Marmaduke
+    Sirius	      Black	         null
+    Remus	        Lupin	         null
+    Albus	        Dumbledore	   null
+
+
+  The cat's name, adopter's name, and adopted date for each cat adopted within the past month to be displayed as part of the "Happy Tail" social media promotion which posts recent successful adoptions.
+
+    SELECT
+    cats.name AS "Cat Name",
+    concat (adopters.first_name, ' ',
+    adopters.last_name) AS "Adopter Full Name",
+    cat_adoptions.date AS "Adoption Date"
+    FROM cat_adoptions
+    JOIN cats
+      ON cat_adoptions.cat_id = cats.id
+    JOIN adopters
+      ON cat_adoptions.adopter_id = adopters.id
+    WHERE cat_adoptions.date >= CURRENT_DATE - INTERVAL '30 DAYS';
+
+
+    Cat Name	  Adopter Full Name	      Adoption Date
+    Mushi	      Arabella Figg	          2019-05-14T00:00:00.000Z
+    Victoire	  Argus Filch	            2019-05-19T00:00:00.000Z
+
+
+
+  Create a list of adopters who have not yet chosen a dog to adopt.
+
+    SELECT
+    concat (adopters.first_name, ' ',
+        adopters.last_name) AS "Adopter Full Name"
+    FROM adopters
+    LEFT OUTER JOIN dog_adoptions
+      ON adopters.id = dog_adoptions.adopter_id
+    WHERE dog_id is NULL;
+
+    Adopter Full Name
+    Arabella Figg
+    Hermione Granger
+
+
+  Lists of all cats and all dogs who have not been adopted.
+
+    SELECT
+    concat (cats.name, ' ',' (ID: ', cats.id, ')')AS "Available Pets"
+    FROM cats
+    LEFT OUTER JOIN cat_adoptions
+      ON cats.id = cat_adoptions.cat_id
+    WHERE cat_adoptions.cat_id is NULL
+    UNION
+    SELECT
+    concat (dogs.name, ' ', ' (ID: ', dogs.id, ')')AS "Available Pets"
+    FROM dogs
+    LEFT OUTER JOIN dog_adoptions
+      ON dogs.id = dog_adoptions.dog_id
+    WHERE dog_adoptions.dog_id is NULL;
+
+
+      Available Pets
+      Boujee (ID: 10001)
+      Lassie (ID: 10003)
+      Marley (ID: 10004)
+      Marmaduke (ID: 10006)
+      Munchkin (ID: 10002)
+      Nala (ID: 5)
+      Seashell (ID: 2)
+
+  The name of the person who adopted Rosco.
+
+    SELECT
+    concat (adopters.first_name, ' ',
+            adopters.last_name) AS "Adopter Full Name", dogs.name AS "Adopted Dog Name"
+    FROM dog_adoptions
+    JOIN adopters
+      ON adopters.id = dog_adoptions.adopter_id
+    JOIN dogs
+      ON dogs.id = dog_adoptions.dog_id
+    WHERE dogs.name = 'Rosco';
+
+
+    Adopter Full Name	    Adopted Dog Name
+    Argus Filch	          Rosco
+
+
+9. Using this Library schema and data, write queries applying the following scenarios and include the results:
+
+  To determine if the library should buy more copies of a given book, please provide the names and position, in order, of all of the patrons with a hold (request for a book with all copies checked out) on "Advanced Potion-Making".
+
+    SELECT patrons.name, holds.rank
+    FROM holds
+    JOIN patrons
+      ON patrons.id =holds.patron_id
+    JOIN books
+      ON books.isbn= holds.isbn
+    WHERE books.title = 'Advanced Potion-Making'
+    ORDER by rank ASC;
+
+
+    name	            rank
+    Terry Boot	      1
+    Cedric Diggory	  2
+
+  List all of the library patrons. If they have one or more books checked out, list the books with the patrons.
+
+    SELECT patrons.name, books.title
+    FROM transactions
+    RIGHT OUTER JOIN patrons
+      ON transactions.patron_id = patrons.id
+    LEFT OUTER JOIN books
+      ON transactions.isbn = books.isbn
+      AND transactions.checked_in_date is NULL;
+
+    name	                title
+    Hermione Granger	    null
+    Cho Chang	            null
+    Terry Boot	          null
+    Padma Patil	          null
+    Terry Boot	          Advanced Potion-Making
+    Hermione Granger	    null
+    Cedric Diggory	      Fantastic Beasts and Where to Find Them
+
+
+
