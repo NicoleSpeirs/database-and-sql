@@ -4,10 +4,12 @@
 
 2. Explain, in your own words, the difference between an INNER JOIN, LEFT OUTER JOIN, and RIGHT OUTER JOIN. Give a real-world example for each.
 
-  IF we have 3 tables (husband table, wife table, and child table)our child table is the INNER JOIN and will include information that is common between hasband and wife table since they share the same child. The LEFT OUTER JOIN and RIGHT OUTER JOIN tables in this case are the hasband and wife tables and will include information to the left and right of the child table if we were to join them.
-  INNER JOIN child's name, mother's name, father's name.
-  LEFT OUTER JOIN  wife table that will have the same child name as the husband table, but different age, ss number and phone number.
-  RIGHT OUTER JOIN hasband table that will have the same child name in common with wife's table but different age, ss number and phone number.
+INNER JOIN will return all data in rows that are common between both tables with a matching foreign key. For example, a rental complex needs a list with all current tenants and the current price of their apartment unit.
+
+LEFT OUTER JOIN will return all data from the left table, and any matching data from right table. If the right table has no matching data it will return NULL. For example if a rental complex needs a list of all of the tenants names and apt number for current tenants.
+
+RIGHT OUTER JOIN will return all data from the right table, and any matching data on the left table. If the left table has no matching data it will return NULL. For example the apartment complex wants a list of all the available and accupied units with a list of names next to the accupied units.
+
 
 3. Define primary key and foreign key. Give a real-world example for each.
 
@@ -21,9 +23,14 @@
 5. Change this query so that you are using aliasing:
 
     SELECT professor.name, compensation.salary,
-    compensation.vacation_days FROM professor JOIN
-    compensation ON professor.id =
+    compensation.vacation_days
+    FROM professor
+    JOIN compensation ON professor.id =
     compensation.professor_id;
+
+    SELECT p.name, c.salary, c.vacation_days
+    FROM professor AS p
+    JOIN compensation AS c ON p.id = c.professor_id;
 
 6. Why would you use a NATURAL JOIN? Give a real-world example.
 
@@ -33,12 +40,10 @@
 
  List all employees and all shifts.
 
-    SELECT  employees.name, scheduled_shifts.shift_id
-    FROM employees
-    JOIN scheduled_shifts
-    ON employees.id = scheduled_shifts.employee_id;
-
-
+  SELECT e.name, e.id, s.date, s.start_time, s.end_time
+  FROM employees AS e
+  LEFT JOIN scheduled_shifts AS ss ON e.id = ss.employee_id
+  LEFT JOIN shifts AS s ON s.id = ss.shift_id;
 
 
 8. Using this Adoption schema and data, please write queries to retrieve the following information and include the results:
@@ -157,22 +162,28 @@
 
   List all of the library patrons. If they have one or more books checked out, list the books with the patrons.
 
-    SELECT patrons.name, books.title
+    SELECT DISTINCT patrons.name,
+      (SELECT b.title
+      FROM
+        (SELECT books.title, transactions.checked_in_date, transactions.patron_id
+        FROM transactions
+        LEFT OUTER JOIN books ON books.isbn = transactions.isbn
+        WHERE transactions.checked_in_date IS NULL) AS b
+    WHERE b.patron_id = patrons.id)
     FROM transactions
-    RIGHT OUTER JOIN patrons
-      ON transactions.patron_id = patrons.id
-    LEFT OUTER JOIN books
-      ON transactions.isbn = books.isbn
-      AND transactions.checked_in_date is NULL;
+    LEFT OUTER JOIN patrons ON patrons.id = transactions.patron_id
+    LEFT OUTER JOIN books ON books.isbn = transactions.isbn
+    ORDER BY patrons.name;
 
     name	                title
-    Hermione Granger	    null
+    Cedric Diggory	      Fantastic Beasts and Where to Find Them
     Cho Chang	            null
-    Terry Boot	          null
+    Hermione Granger	    null
     Padma Patil	          null
     Terry Boot	          Advanced Potion-Making
-    Hermione Granger	    null
-    Cedric Diggory	      Fantastic Beasts and Where to Find Them
+
+
+
 
 
 
